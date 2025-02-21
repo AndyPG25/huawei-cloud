@@ -1,28 +1,52 @@
 package com.miempresa.controllers;
 
+import com.huaweicloud.sdk.bss.v2.BssClient;
+import com.huaweicloud.sdk.bss.v2.model.ListRateOnPeriodDetailRequest;
+import com.huaweicloud.sdk.bss.v2.model.ListRateOnPeriodDetailResponse;
+import com.huaweicloud.sdk.bss.v2.model.PeriodProductInfo;
+import com.huaweicloud.sdk.bss.v2.model.RateOnPeriodReq;
+import com.huaweicloud.sdk.core.auth.BasicCredentials;
+import com.huaweicloud.sdk.core.auth.ICredential;
+import com.huaweicloud.sdk.bss.v2.region.BssRegion;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
+
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/calculadora")
 public class CalculadoraController {
 
     @GetMapping("/pricing")
-    public ResponseEntity<String> getPricing(@RequestHeader("X-Auth-Token") String authToken) {
-        String url = "https://bss.myhuaweicloud.com/v1/pricing/calculator";
-        
-        RestTemplate restTemplate = new RestTemplate();
-        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        headers.set("X-Auth-Token", authToken);
-        
-        org.springframework.http.HttpEntity<String> entity = new org.springframework.http.HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, String.class);
-        
-        return ResponseEntity.ok(response.getBody());
+    public ListRateOnPeriodDetailResponse getPricing() {
+        ICredential auth = new BasicCredentials()
+                .withAk(System.getenv("HUAWEICLOUD_SDK_AK"))
+                .withSk(System.getenv("HUAWEICLOUD_SDK_SK"));
+
+        BssClient client = BssClient.newBuilder()
+                .withCredential(auth)
+                .withRegion(BssRegion.CN_NORTH_1)
+                .build();
+
+        PeriodProductInfo productInfo = new PeriodProductInfo()
+            .withCloudServiceType("hws.service.type.ecs")
+            .withResourceType("hws.resource.type.vm")
+            .withRegionCode("la-region-deseada")
+            .withProductSpecId("ecs.g6.large")
+            .withPeriodType(2) // Facturación mensual
+            .withPeriodNum(1);  // 1 mes
+
+        ListRateOnPeriodDetailRequest request = new ListRateOnPeriodDetailRequest()
+            .withBody(new RateOnPeriodReq()
+                .withProductInfos(Collections.singletonList(productInfo))
+            );
+
+        try {
+            return client.listRateOnPeriodDetail(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

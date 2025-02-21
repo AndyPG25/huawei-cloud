@@ -4,16 +4,35 @@ import com.huaweicloud.sdk.iam.v3.IamClient;
 import com.huaweicloud.sdk.iam.v3.region.IamRegion;
 import com.huaweicloud.sdk.core.auth.BasicCredentials;
 import com.huaweicloud.sdk.core.auth.ICredential;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+return IamClient.newBuilder()
+    .withCredential(auth)
+    .withRegion(IamRegion.valueOf(CN_NORTH_1)) // Usa IamRegion en lugar de Region
+    .build();
+
+
+@Component
 public class HuaweiAuth {
-    public static IamClient getIamClient() {
+
+    @Value("${huawei.ak}")
+    private String accessKey;
+
+    @Value("${huawei.sk}")
+    private String secretKey;
+
+    @Value("${huawei.region}")
+    private String region;
+
+    public IamClient getIamClient() {
         ICredential auth = new BasicCredentials()
-            .withAk(System.getenv("ISAZG2F4BHLWEAZKKIHU"))
-            .withSk(System.getenv("2PDoa9pKqc9uedBqL9ktemUO3Ev8szzFRmpGM84Y"));
+                .withAk(accessKey)
+                .withSk(secretKey);
 
         return IamClient.newBuilder()
-            .withCredential(auth)
-            .withRegion(IamRegion.valueOf("LA-Mexico City2")) // Ajusta según tu región
-            .build();
+                .withCredential(auth)
+                .withRegion(IamRegion.valueOf(region))
+                .build();
     }
 }

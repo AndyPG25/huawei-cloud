@@ -3,12 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Huawei Cloud</title>
+    <title>Calculadora NG Cloud</title>
+    <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
 </head>
 <body>
-    <h1>Calculadora Huawei Cloud</h1>
-    <button onclick="getPricing()">Obtener Precio</button>
-    <div id="resultado"></div>
+    <header>
+        <h1>Calculadora de Precios - Huawei Cloud</h1>
+    </header>
+    <main>
+        <button class="btn-obtener" onclick="getPricing()">Obtener Precio</button>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Región</th>
+                        <th>Modo de Facturación</th>
+                        <th>Arquitectura de CPU</th>
+                        <th>Tipo</th>
+                        <th>Serie</th>
+                        <th>Imagen</th>
+                        <th>Especificación</th>
+                        <th>Cantidad</th>
+                        <th>Disco</th>
+                        <th>Cantidad</th>
+                        <th>EIP</th>
+                        <th>Tipo EIP</th>
+                        <th>Cantidad</th>
+                        <th>Tipo de Ancho de Banda</th>
+                        <th>Ancho de Banda</th>
+                        <th>Precio Estimado</th>
+                    </tr>
+                </thead>
+                <tbody id="pricing-table">
+                    <!-- Datos insertados dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </main>
 </body>
 </html>
