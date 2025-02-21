@@ -32,7 +32,7 @@ public class CalculadoraController {
         PeriodProductInfo productInfo = new PeriodProductInfo()
             .withCloudServiceType("hws.service.type.ecs")
             .withResourceType("hws.resource.type.vm")
-            .withRegionCode("la-region-deseada")
+            .withRegion("la-region-deseada")
             .withProductSpecId("ecs.g6.large")
             .withPeriodType(2) // Facturación mensual
             .withPeriodNum(1);  // 1 mes
